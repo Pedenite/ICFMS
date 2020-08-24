@@ -36,11 +36,8 @@ def process_PPM(file, test):
         #bcd = [i+100 for i in bcd]
         i = 0
         while(i < len(bcd)):
-            if(bcd[i] >= 100):
-                bcd[i] -= 100
-            else:
-                bcd[i] = 0
-            i+=1
+            bcd[i+2]=0
+            i+=3
         bcd = str(bcd).replace('[', '')
         bcd = bcd.replace(']', '')
         new_file.write(bcd.replace(',', '')+'\n')
