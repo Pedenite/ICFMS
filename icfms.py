@@ -1,5 +1,6 @@
 import os
 import sys
+import math
 from classes.ppm import PPM
 
 def get_file(file_name):
@@ -51,13 +52,26 @@ def crop_PPM(ppm):
             crop_y = 0
 
         if crop_y >= limit:
-            m_y = i
+            m_y = i-limit
             break
         i += 1
     
-    # m_x = m_x/i
+    m_x = m_x/(i*3)
 
-    print(m_x, m_y, i, j)
+    resize_PPM(ppm, m_x, m_y)
+
+def resize_PPM(ppm, x, y):
+    x = math.ceil(x)
+    y = math.ceil(y)
+    new_set = []
+    for line in range(y):
+        for color in range(x*3):
+            new_set.append(ppm.pixels[color + ppm.size1*3*line])
+
+    ppm.size1 = x
+    ppm.size2 = y
+    ppm.pixels = new_set
+    print(len(ppm.pixels))
 
 def save(file_name, ppm):
     new_file = open(".tempICFMS/result.ppm", "w")
