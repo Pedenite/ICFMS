@@ -10,4 +10,4 @@ class PPM:
         print(self.id)
         print(self.size1, self.size2)
         print(self.comp)
-        #print(self.pixels)
+        print(self.pixels[:10])

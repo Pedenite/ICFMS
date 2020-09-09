@@ -15,6 +15,7 @@ def prepare_PPM():
     c = file.readline()
 
     test = PPM(abc[0], abc[1], int(c))
+    test.pixels = []
     d = ""
     while True:
         d = file.readline()
@@ -87,7 +88,6 @@ def save(file_name, ppm):
         print(file_name)
 
     os.makedirs(os.path.dirname(file_name), exist_ok=True)
-    output_file = open(file_name, "w")
 
     if temp[len(temp)-1] == "jpg" or temp[len(temp)-1] == "png" or temp[len(temp)-1] == "jpeg":
         os.system("convert .tempICFMS/result.ppm " + file_name)
@@ -101,6 +101,7 @@ def image_processing():
         print("fatal error: no input files\nPlease insert all input files separated by a blank space after program name")
         return
     for i,file_name in enumerate(fileList):
+        print(file_name)
         get_file(file_name)
         ppm = prepare_PPM()
         crop_PPM(ppm)
