@@ -1,7 +1,4 @@
 # ICFMS
-## Image Cropper for Mom's Scanner ;)
-
-Might try to think of a better name later haha...
 
 Use: `python3 icfms.py file1.jpg file2.png file3.ppm ...`
 
