@@ -34,10 +34,12 @@ def crop_PPM(ppm):
     m_x = m_y = 0
     crop_x = crop_y = 0
     limit = 10
+    precision = 250
+
     while i < ppm.size2:
         j = 0
         while j < ppm.size1*3:
-            if ppm.pixels[j + ppm.size1*3*i] > 240:
+            if ppm.pixels[j + ppm.size1*3*i] > precision:
                 crop_x += 1
             else:
                 crop_x = 0
@@ -59,7 +61,8 @@ def crop_PPM(ppm):
     
     m_x = m_x/(i*3)
 
-    resize_PPM(ppm, m_x, m_y)
+    
+    return m_x, m_y
 
 def resize_PPM(ppm, x, y):
     x = math.ceil(x)
@@ -73,6 +76,15 @@ def resize_PPM(ppm, x, y):
     ppm.size2 = y
     ppm.pixels = new_set
     print(len(ppm.pixels))
+
+def get_dir(file_name):
+    dirs = file_name.split('/')
+    dirs.pop()
+    direc = ''
+    if len(dirs) > 0:
+        direc = str(dirs).replace('[', '').replace(']', '').replace(',', '/').replace('\'', '').replace(" ", "") # get directory from file_name
+
+    return direc
 
 def save(file_name, ppm):
     new_file = open(".tempICFMS/result.ppm", "w")
@@ -97,21 +109,27 @@ def save(file_name, ppm):
 def image_processing():
     fileList = sys.argv
     fileList.pop(0)
+    template = False
+    dim_x = dim_y = 0
+
+    if fileList[0] == "-t":
+        template = True
+        fileList.pop(0)
+
     if len(fileList) == 0:
-        print("fatal error: no input files\nPlease insert all input files separated by a blank space after program name")
+        print("fatal error: no input files\nPlease insert all input files separated by a blank space after program name\nFor a workaround of the recent problems, it's possible to use the -t flag to resize all images to the dimensions of the first")
         return
+
     for i,file_name in enumerate(fileList):
         print(file_name)
         get_file(file_name)
         ppm = prepare_PPM()
-        crop_PPM(ppm)
+        if not(template and i > 0):
+            dim_x, dim_y = crop_PPM(ppm)
 
-        dirs = file_name.split('/')
-        dirs.pop()
-        direc = ''
-        if len(dirs) > 0:
-            direc = str(dirs).replace('[', '').replace(']', '').replace(',', '/').replace('\'', '') # get directory from file_name
+        resize_PPM(ppm, dim_x, dim_y)
 
+        direc = get_dir(file_name)
         save(direc + "/result/out" + str(i) + "." + str(file_name.split('.').pop()), ppm)  
 
 if(__name__ == "__main__"):
