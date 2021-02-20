@@ -77,6 +77,10 @@ def resize_PPM(ppm, x, y):
     ppm.pixels = new_set
     print(len(ppm.pixels))
 
+def darken(ppm, ammount):
+    for i in range(len(ppm.pixels)):
+        ppm.pixels[i] = max(0, ppm.pixels[i]-ammount)
+
 def get_dir(file_name):
     dirs = file_name.split('/')
     dirs.pop()
@@ -112,22 +116,25 @@ def image_processing():
     template = False
     dim_x = dim_y = 0
 
-    if fileList[0] == "-t":
-        template = True
-        fileList.pop(0)
-
     if len(fileList) == 0:
         print("fatal error: no input files\nPlease insert all input files separated by a blank space after program name\nFor a workaround of the recent problems, it's possible to use the -t flag to resize all images to the dimensions of the first")
         return
+
+    if fileList[0] == "-t":
+        template = True
+        fileList.pop(0)
 
     for i,file_name in enumerate(fileList):
         print(file_name)
         get_file(file_name)
         ppm = prepare_PPM()
+
         if not(template and i > 0):
             dim_x, dim_y = crop_PPM(ppm)
 
         resize_PPM(ppm, dim_x, dim_y)
+
+        # darken(ppm, 10)
 
         direc = get_dir(file_name)
         save(direc + "/result/out" + str(i) + "." + str(file_name.split('.').pop()), ppm)  
